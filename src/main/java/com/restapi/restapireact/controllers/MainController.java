@@ -26,10 +26,22 @@ public class MainController {
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/tasks")
+    public ResponseEntity<?> getTasksByCard(@PathVariable(name = "id") Long id) {
+        List<Task> tasks = taskService.getAllByCard(cardService.getOne(id));
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> cardDetails(@PathVariable(name = "id") Long id) {
         List<Task> tasks = taskService.getAllByCard(cardService.getOne(id));
         return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/card/{id}")
+    public ResponseEntity<?> getCard(@PathVariable(name = "id") Long id) {
+        Card card = cardService.getOne(id);
+        return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
     @GetMapping(value = "/task/{id}")

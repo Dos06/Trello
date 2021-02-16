@@ -1,38 +1,41 @@
 import {useEffect, useState} from "react";
 import Task from "./Task/Task";
 import AddForm from "./AddForm/AddForm";
+import DbService from "../../_services/DbService";
 
 const CardDetails = (props) => {
-    console.log(props.id + ' id')
-    const [data, setData] = useState([]);
+    const [card, setCard] = useState({});
+    const [tasks, setTasks] = useState([]);
 
-    async function loadData() {
-        let response = await fetch('http://localhost:8080/' + props.id);
-        let tableData = await response.json();
-        setData(tableData);
+    const loadData = () => {
+        DbService.getCard(props.id).then( response => {
+            setCard(response.data);
+        });
+        DbService.getTasksByCard(props.id).then( response => {
+            setTasks(response.data);
+        });
     }
 
     useEffect( () => {
         loadData();
     }, [] )
 
-
     return (
         <div>
             <div className="alert alert-secondary">
-                A simple secondary alert!
+                <h1>{card.name}</h1>
+                <h2>{card.date}</h2>
             </div>
-            
+
             <div className="mt-4">
-                <AddForm cardId={props.id}/>
+                <AddForm cardId={card.id}/>
             </div>
 
             <div>
                 <div className="row">
-                    {/*{console.log(data)}*/}
-                    {(data.length > 0) ? data.map(t => (
-                        <Task id={t.id} name={t.name} date={t.date} done={t.done} card={t.card.id}/>
-                    )) : console.log('ahah' + data)}
+                    {tasks.map(t => (
+                        <Task key={t.id} id={t.id} name={t.name} date={t.date} done={t.done} card={t.card.id}/>
+                    ))}
                 </div>
             </div>
         </div>

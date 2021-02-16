@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react";
 import Card from "./Card/Card";
+import DbService from "../../../_services/DbService";
 
-const CardsTable = () => {
-    const [data, setData] = useState([]);
+const CardsTable = (props) => {
 
-    async function loadData() {
-        let response = await fetch('http://localhost:8080/allcards');
-        let tableData = await response.json();
-        setData(tableData);
+    const [cards, setCards] = useState([]);
+
+    const loadData = () => {
+        DbService.getAllCards().then( response => {
+            setCards(response.data);
+        });
     }
 
     useEffect( () => {
@@ -17,8 +19,8 @@ const CardsTable = () => {
     return (
         <div>
             <div className="row">
-                {data?.map(c => (
-                    <Card id={c.id} name={c.name} date={c.date}/>
+                {cards.map(c => (
+                    <Card key={c.id} id={c.id} name={c.name} date={c.date}/>
                 ))}
             </div>
         </div>
