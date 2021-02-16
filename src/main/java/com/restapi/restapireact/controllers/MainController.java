@@ -1,7 +1,9 @@
 package com.restapi.restapireact.controllers;
 
-import com.restapi.restapireact.entities.Item;
-import com.restapi.restapireact.services.ItemService;
+import com.restapi.restapireact.entities.Card;
+import com.restapi.restapireact.entities.Task;
+import com.restapi.restapireact.services.CardService;
+import com.restapi.restapireact.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +16,37 @@ import java.util.List;
 @RequestMapping(value = "/")
 public class MainController {
     @Autowired
-    private ItemService itemService;
+    private CardService cardService;
+    @Autowired
+    private TaskService taskService;
 
-    @GetMapping(value = "/allitems")
-    public ResponseEntity<?> getAllItems() {
-        List<Item> items = itemService.getAll();
-        return new ResponseEntity<>(items, HttpStatus.OK);
+    @GetMapping(value = "/allcards")
+    public ResponseEntity<?> getAllCards() {
+        List<Card> cards = cardService.getAll();
+        return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/addItem")
-    public ResponseEntity<?> addItem(@RequestBody Item item) {
-        itemService.add(item);
-        return ResponseEntity.ok(item);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> cardDetails(@PathVariable(name = "id") Long id) {
+        List<Task> tasks = taskService.getAllByCard(cardService.getOne(id));
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/task/{id}")
+    public ResponseEntity<?> taskDetails(@PathVariable(name = "id") Long id) {
+        Task task = taskService.getOne(id);
+        return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/addCard")
+    public ResponseEntity<?> addCard(@RequestBody Card card) {
+        cardService.add(card);
+        return ResponseEntity.ok(card);
+    }
+
+    @PostMapping(value = "/addTask")
+    public ResponseEntity<?> addTask(@RequestBody Task task) {
+        taskService.add(task);
+        return ResponseEntity.ok(task);
     }
 }

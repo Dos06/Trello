@@ -5,13 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "items")
+@Table(name = "tasks")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,10 +20,12 @@ public class Item {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
-    private int price;
+    @Column(name = "date")
+    private LocalDate date = LocalDate.now();
 
-    @Column(name = "amount")
-    private int amount;
+    @Column(name = "done")
+    private boolean done = false;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Card card;
 }

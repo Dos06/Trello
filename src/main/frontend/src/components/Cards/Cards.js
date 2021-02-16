@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddForm from "./AddForm/AddForm";
-import ItemsTable from "./ItemsTable/ItemsTable";
+import CardsTable from "./CardsTable/CardsTable";
 
-const Items = () => {
+const Cards = () => {
     return (
         <div>
             <AddForm/>
-            <ItemsTable/>
+            <CardsTable/>
         </div>
     );
 }
 
-export default Items;
+export default Cards;
