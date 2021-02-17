@@ -61,4 +61,10 @@ public class MainController {
         taskService.add(task);
         return ResponseEntity.ok(task);
     }
+
+    @PostMapping(value = "/editTask")
+    public ResponseEntity<?> editTask(@RequestBody Task task) {
+        taskService.save(task);
+        return ResponseEntity.ok(task);
+    }
 }

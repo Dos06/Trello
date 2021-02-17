@@ -1,26 +1,39 @@
 import './App.css';
+import {Fragment} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, useParams, withRouter} from 'react-router-dom';
 import Cards from "./components/Cards/Cards";
 import CardDetails from "./components/CardDetails/CardDetails";
+import Header from "./components/Header/Header";
+
+const HeaderWithRouter = withRouter(Header);
 
 function App() {
     return (
         <BrowserRouter>
-            <div className={'container'}>
-                <div className="row mt-4">
-                    <div className="col-10 mx-auto">
+            <Fragment>
+                <HeaderWithRouter />
+                <div className={'container'}>
+                    <div className="row mt-4">
+                        <div className="col-10 mx-auto">
 
-                        {/*TODO: make navigation by Card / Task*/}
-                        <Route path={'/1'} render={ () => <CardDetails id={1}/> } />
-                        <Route path={'/2'} render={ () => <CardDetails id={2}/> } />
-                        <Route path={'/3'} render={ () => <CardDetails id={3}/> } />
+                            <Switch>
+                                <Route path={'/:id'} children={<Child/>} />
+                                <Route path='/' exact render={ () => <Cards/> } />
+                            </Switch>
 
-                        <Route path='/' exact render={ () => <Cards/> } />
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Fragment>
         </BrowserRouter>
+    );
+}
+
+function Child() {
+    let {id} = useParams();
+    return (
+        <CardDetails id={id}/>
     );
 }
 

@@ -2,7 +2,7 @@ import {Button, Form} from "react-bootstrap";
 import {useState} from "react";
 
 const AddForm = (props) => {
-    const cardId = props.cardId;
+    const card = props.card;
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
 
@@ -10,7 +10,7 @@ const AddForm = (props) => {
         setName(event.target.value);
     }
     const onSubmitForm = event => {
-        const inputData = {name, cardId};
+        const inputData = {name, card};
         addTask(inputData)
 
         setName('');
@@ -31,6 +31,8 @@ const AddForm = (props) => {
             referrerPolicy: 'no-referrer',
             body: JSON.stringify(data)
         });
+
+        props.loadData();
 
         let messageData = await response.json();
         setMessage(messageData.id ? 'Added: ' + messageData : 'Error')

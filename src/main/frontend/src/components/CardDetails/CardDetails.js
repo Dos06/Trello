@@ -28,13 +28,13 @@ const CardDetails = (props) => {
             </div>
 
             <div className="mt-4">
-                <AddForm cardId={card.id}/>
+                <AddForm loadData={loadData} card={card}/>
             </div>
 
             <div>
                 <div className="row">
                     {tasks.map(t => (
-                        <Task key={t.id} id={t.id} name={t.name} date={t.date} done={t.done} card={t.card.id}/>
+                        <Task key={t.id} task={t}/>
                     ))}
                 </div>
             </div>

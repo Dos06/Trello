@@ -27,5 +27,6 @@ public class Task {
     private boolean done = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "card_id")
     private Card card;
 }

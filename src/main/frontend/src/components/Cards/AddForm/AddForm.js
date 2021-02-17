@@ -1,7 +1,7 @@
 import {Button, Form} from "react-bootstrap";
 import {useState} from "react";
 
-const AddForm = () => {
+const AddForm = (props) => {
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
 
@@ -30,6 +30,8 @@ const AddForm = () => {
             referrerPolicy: 'no-referrer',
             body: JSON.stringify(data)
         });
+
+        props.loadData();
 
         let messageData = await response.json();
         setMessage(messageData.id ? 'Added: ' + messageData : 'Error')
