@@ -62,7 +62,19 @@ public class MainController {
         return ResponseEntity.ok(task);
     }
 
-    @PostMapping(value = "/editTask")
+    @PutMapping(value = "/editCard")
+    public ResponseEntity<?> editCard(@RequestBody Card card) {
+        cardService.save(card);
+        return ResponseEntity.ok(card);
+    }
+
+    @DeleteMapping(value = "/deleteCard")
+    public ResponseEntity<?> deleteCard(@RequestBody Card card) {
+        cardService.delete(card);
+        return ResponseEntity.ok(card);
+    }
+
+    @PutMapping(value = "/editTask")
     public ResponseEntity<?> editTask(@RequestBody Task task) {
         taskService.save(task);
         return ResponseEntity.ok(task);

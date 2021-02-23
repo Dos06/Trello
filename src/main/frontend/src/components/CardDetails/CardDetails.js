@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import Task from "./Task/Task";
 import AddForm from "./AddForm/AddForm";
 import DbService from "../../_services/DbService";
+import EditModal from "./EditModal/EditModal";
+import DeleteModal from "./DeleteModal/DeleteModal";
 
 const CardDetails = (props) => {
     const [card, setCard] = useState({});
@@ -25,6 +27,8 @@ const CardDetails = (props) => {
             <div className="alert alert-secondary">
                 <h1>{card.name}</h1>
                 <h2>{card.date}</h2>
+                <EditModal loadData={loadData} card={card}/>
+                <DeleteModal card={card}/>
             </div>
 
             <div className="mt-4">
