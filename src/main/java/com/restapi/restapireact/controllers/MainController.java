@@ -20,9 +20,17 @@ public class MainController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping(value = "/allcards")
-    public ResponseEntity<?> getAllCards() {
-        List<Card> cards = cardService.getAll();
+    @GetMapping("favicon.ico")
+    @ResponseBody
+    void returnNoFavicon() {}
+
+    @GetMapping(value = "/cards")
+    public ResponseEntity<?> getAllCards(@RequestParam(name = "name", defaultValue = "") String name) {
+        List<Card> cards;
+        if (name == null || name.equals(""))
+            cards = cardService.getAll();
+        else
+            cards = cardService.getAllByName(name);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 

@@ -2,9 +2,9 @@ import './App.css';
 import {Fragment} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route, Switch, useParams, withRouter} from 'react-router-dom';
-import Cards from "./components/Cards/Cards";
 import CardDetails from "./components/CardDetails/CardDetails";
 import Header from "./components/Header/Header";
+import CardsContainer from "./components/Cards/CardsContainer";
 
 const HeaderWithRouter = withRouter(Header);
 
@@ -19,7 +19,7 @@ function App() {
 
                             <Switch>
                                 <Route path={'/:id'} children={<Child/>} />
-                                <Route path='/' exact render={ () => <Cards/> } />
+                                <Route path='/' exact render={ () => <CardsContainer/> } />
                             </Switch>
 
                         </div>

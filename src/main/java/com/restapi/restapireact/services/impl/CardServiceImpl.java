@@ -19,6 +19,11 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public List<Card> getAllByName(String name) {
+        return cardRepository.findAllByNameContainingIgnoreCase(name);
+    }
+
+    @Override
     public Card getOne(Long id) {
         return cardRepository.getOne(id);
     }

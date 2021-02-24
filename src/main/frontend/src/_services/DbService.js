@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const allCards = 'http://localhost:8080/allcards';
+const cards = 'http://localhost:8080/cards';
 const card = 'http://localhost:8080/card/';
 const tasksByCard = 'http://localhost:8080/';
 const editCard = 'http://localhost:8080/editCard';
@@ -8,8 +8,8 @@ const deleteCard = 'http://localhost:8080/deleteCard';
 const editTask = 'http://localhost:8080/editTask';
 
 class DbService {
-    async getAllCards() {
-        return axios.get(allCards);
+    async getCards(name) {
+        return axios.get(cards + '?name=' + name);
     }
     async getCard(id) {
         return axios.get(card + id);
