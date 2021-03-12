@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const auth = 'http://localhost:8080/auth';
 const cards = 'http://localhost:8080/cards';
 const card = 'http://localhost:8080/card/';
 const tasksByCard = 'http://localhost:8080/';
@@ -8,6 +9,28 @@ const deleteCard = 'http://localhost:8080/deleteCard';
 const editTask = 'http://localhost:8080/editTask';
 
 class DbService {
+    async login(email, password) {
+        return axios.post(auth, {email, password}).then(response => {
+            let token = response.data['jwtToken']
+            if (token) {
+                localStorage.setItem('user', JSON.stringify(token))
+            }
+            return response.data
+        })
+    }
+
+    async logout() {
+        localStorage.removeItem('user')
+    }
+
+    async register(email, password, name) {
+        return axios.post(auth + '/register', {email, password, name})
+    }
+
+    getCurrentUser() {
+        return JSON.parse(localStorage.getItem('user'))
+    }
+
     async getCards(name) {
         return axios.get(cards + '?name=' + name);
     }

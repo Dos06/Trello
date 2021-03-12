@@ -1,5 +1,27 @@
 import {Nav, Navbar} from "react-bootstrap";
 import {NavLink} from "react-router-dom";
+import DbService from "../../_services/DbService";
+
+const NavItems = () => {
+    const logout = () => {
+        DbService.logout()
+    }
+
+    const user = DbService.getCurrentUser()
+    console.log(user)
+    return (
+        user ?
+            <>
+                <NavLink to={'/profile'} className="nav-link">Profile</NavLink>
+                <NavLink to={'/login'} onClick={logout} className="nav-link">Logout</NavLink>
+            </>
+            :
+            <>
+                <NavLink to={'/register'} className="nav-link">Register</NavLink>
+                <NavLink to={'/login'} className="nav-link">Login</NavLink>
+            </>
+    )
+}
 
 const Header = (props) => {
     const { location } = props;
@@ -10,11 +32,9 @@ const Header = (props) => {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
                     <NavLink to={'/'} className="nav-link">Home</NavLink>
-                    {/*    TODO: other pages links*/}
                 </Nav>
                 <Nav activeKey={location.pathname}>
-                    <NavLink to={'/register'} className="nav-link">Register</NavLink>
-                    <NavLink to={'/login'} className="nav-link">Login</NavLink>
+                    <NavItems/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

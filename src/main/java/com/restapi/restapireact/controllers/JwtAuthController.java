@@ -1,20 +1,24 @@
 package com.restapi.restapireact.controllers;
 
+import com.restapi.restapireact.entities.RoleEntity;
+import com.restapi.restapireact.entities.UserEntity;
 import com.restapi.restapireact.jwt.JwtRequest;
 import com.restapi.restapireact.jwt.JwtResponse;
 import com.restapi.restapireact.jwt.JwtTokenGenerator;
+import com.restapi.restapireact.services.RoleService;
 import com.restapi.restapireact.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,6 +28,9 @@ public class JwtAuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -45,5 +52,18 @@ public class JwtAuthController {
         } catch (BadCredentialsException e) {
             throw new Exception("Invalid credentials", e);
         }
+    }
+
+    @PostMapping(value = "/auth/register")
+    @PreAuthorize("isAnonymous()")
+    public ResponseEntity<?> signUp(@RequestBody UserEntity newUser) {
+        UserEntity user = userService.getOneByEmail(newUser.getEmail());
+        if (user == null) {
+            List<RoleEntity> roles = new ArrayList<>(1);
+            roles.add(roleService.getOneByName("ROLE_USER"));
+            newUser.setRoles(roles);
+            userService.add(newUser);
+        }
+        return ResponseEntity.ok(newUser);
     }
 }

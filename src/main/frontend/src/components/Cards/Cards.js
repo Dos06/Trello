@@ -38,13 +38,13 @@ const Cards = (props) => {
     }, [] )
 
     return (
-        <div>
+        <>
             <AddForm loadData={loadData}/>
             <Search loadCardsByName={loadCardsByName}/>
             {
                 (cards === null || cards.length === 0) ? <NotFound/> : <CardsTable cards={cards}/>
             }
-        </div>
+        </>
     );
 }
 
