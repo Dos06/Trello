@@ -5,6 +5,9 @@ import {useHistory} from "react-router-dom";
 
 const Register = () => {
     const history = useHistory()
+    if (DbService.getCurrentUser()) {
+        history.push('/profile')
+    }
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");

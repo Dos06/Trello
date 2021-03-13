@@ -8,7 +8,6 @@ const NavItems = () => {
     }
 
     const user = DbService.getCurrentUser()
-    console.log(user)
     return (
         user ?
             <>

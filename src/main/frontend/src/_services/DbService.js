@@ -11,8 +11,9 @@ const editTask = 'http://localhost:8080/editTask';
 class DbService {
     async login(email, password) {
         return axios.post(auth, {email, password}).then(response => {
-            let token = response.data['jwtToken']
+            let token = response.data
             if (token) {
+                this.getUserProfile(email)
                 localStorage.setItem('user', JSON.stringify(token))
             }
             return response.data
@@ -21,6 +22,7 @@ class DbService {
 
     async logout() {
         localStorage.removeItem('user')
+        localStorage.removeItem('profile')
     }
 
     async register(email, password, name) {
@@ -29,6 +31,29 @@ class DbService {
 
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'))
+    }
+
+    getCurrentProfile() {
+        return JSON.parse(localStorage.getItem('profile'))
+    }
+
+    getUserProfile(email) {
+        return axios.get(auth + '/profile/' + email).then(response => {
+            let data = response.data
+            localStorage.setItem('profile', JSON.stringify(data))
+            return data
+        })
+    }
+
+    editUserName(email, name) {
+        return axios.put(auth + `/edit/name/${email}/${name}`).then(r => {
+            this.getUserProfile(email)
+            return r
+        })
+    }
+
+    async editUserPassword(email, oldpassword, password) {
+        return await axios.put(auth + `/edit/password/${email}/${oldpassword}/${password}`)
     }
 
     async getCards(name) {

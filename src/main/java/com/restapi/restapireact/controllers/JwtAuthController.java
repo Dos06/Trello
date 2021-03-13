@@ -8,6 +8,7 @@ import com.restapi.restapireact.jwt.JwtTokenGenerator;
 import com.restapi.restapireact.services.RoleService;
 import com.restapi.restapireact.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,10 +16,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -34,6 +37,9 @@ public class JwtAuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/auth")
     public ResponseEntity<?> auth(@RequestBody JwtRequest request) throws Exception {
@@ -65,5 +71,33 @@ public class JwtAuthController {
             userService.add(newUser);
         }
         return ResponseEntity.ok(newUser);
+    }
+
+    @GetMapping(value = "/auth/profile/{email}")
+    public ResponseEntity<?> getProfile(@PathVariable String email) {
+        UserEntity user = userService.getOneByEmail(email);
+        return ResponseEntity.ok(Objects.requireNonNullElse(user, HttpEntity.EMPTY));
+    }
+
+    @PutMapping(value = "/auth/edit/name/{email}/{name}")
+    public ResponseEntity<?> editUserName(@PathVariable String email, @PathVariable String name) {
+        UserEntity user = userService.getOneByEmail(email);
+        user.setName(name);
+        userService.save(user);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping(value = "/auth/edit/password/{email}/{oldpassword}/{password}")
+    public ResponseEntity<?> editUserPassword(
+            @PathVariable String email,
+            @PathVariable String oldpassword,
+            @PathVariable String password) {
+        UserEntity user = userService.getOneByEmail(email);
+        System.out.println(user.getPassword() + "---------" + passwordEncoder.encode(oldpassword));
+//        if (user.getPassword().equals(passwordEncoder.encode(oldpassword))) {
+            user.setPassword(password);
+            userService.save(user);
+//        }
+        return ResponseEntity.ok(user);
     }
 }

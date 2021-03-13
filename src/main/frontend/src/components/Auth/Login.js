@@ -5,6 +5,9 @@ import DbService from "../../_services/DbService";
 
 const Login = () => {
     const history = useHistory()
+    if (DbService.getCurrentUser()) {
+        history.push('/profile')
+    }
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
