@@ -73,25 +73,28 @@ public class JwtAuthController {
         return ResponseEntity.ok(newUser);
     }
 
-    @GetMapping(value = "/auth/profile/{email}")
-    public ResponseEntity<?> getProfile(@PathVariable String email) {
+    @GetMapping(value = "/auth/profile/{token}")
+    public ResponseEntity<?> getProfile(@PathVariable String token) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
         UserEntity user = userService.getOneByEmail(email);
         return ResponseEntity.ok(Objects.requireNonNullElse(user, HttpEntity.EMPTY));
     }
 
-    @PutMapping(value = "/auth/edit/name/{email}/{name}")
-    public ResponseEntity<?> editUserName(@PathVariable String email, @PathVariable String name) {
+    @PutMapping(value = "/auth/edit/name/{token}/{name}")
+    public ResponseEntity<?> editUserName(@PathVariable String token, @PathVariable String name) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
         UserEntity user = userService.getOneByEmail(email);
         user.setName(name);
         userService.save(user);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping(value = "/auth/edit/password/{email}/{oldpassword}/{password}")
+    @PutMapping(value = "/auth/edit/password/{token}/{oldpassword}/{password}")
     public ResponseEntity<?> editUserPassword(
-            @PathVariable String email,
+            @PathVariable String token,
             @PathVariable String oldpassword,
             @PathVariable String password) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
         UserEntity user = userService.getOneByEmail(email);
         System.out.println(user.getPassword() + "---------" + passwordEncoder.encode(oldpassword));
 //        if (user.getPassword().equals(passwordEncoder.encode(oldpassword))) {

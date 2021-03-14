@@ -13,15 +13,15 @@ class DbService {
         return axios.post(auth, {email, password}).then(response => {
             let token = response.data
             if (token) {
-                this.getUserProfile(email)
-                localStorage.setItem('user', JSON.stringify(token))
+                localStorage.setItem('token', JSON.stringify(token))
+                this.getUserProfile()
             }
             return response.data
         })
     }
 
     async logout() {
-        localStorage.removeItem('user')
+        localStorage.removeItem('token')
         localStorage.removeItem('profile')
     }
 
@@ -29,31 +29,30 @@ class DbService {
         return axios.post(auth + '/register', {email, password, name})
     }
 
-    getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'))
+    getCurrentToken() {
+        return JSON.parse(localStorage.getItem('token'))
     }
 
-    getCurrentProfile() {
-        return JSON.parse(localStorage.getItem('profile'))
-    }
-
-    getUserProfile(email) {
-        return axios.get(auth + '/profile/' + email).then(response => {
+    getUserProfile() {
+        let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
+        return axios.get(auth + '/profile/' + token).then(response => {
             let data = response.data
             localStorage.setItem('profile', JSON.stringify(data))
             return data
         })
     }
 
-    editUserName(email, name) {
-        return axios.put(auth + `/edit/name/${email}/${name}`).then(r => {
-            this.getUserProfile(email)
+    editUserName(name) {
+        let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
+        return axios.put(auth + `/edit/name/${token}/${name}`).then(r => {
+            this.getUserProfile()
             return r
         })
     }
 
-    async editUserPassword(email, oldpassword, password) {
-        return await axios.put(auth + `/edit/password/${email}/${oldpassword}/${password}`)
+    async editUserPassword(oldpassword, password) {
+        let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
+        return await axios.put(auth + `/edit/password/${token}/${oldpassword}/${password}`)
     }
 
     async getCards(name) {

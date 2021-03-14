@@ -1,19 +1,44 @@
 import {Button, Form} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import DbService from "../../_services/DbService";
 import {useHistory} from "react-router-dom";
 
 const Profile = () => {
     const history = useHistory()
-    if (!DbService.getCurrentUser()) {
+    if (!DbService.getCurrentToken()) {
         history.push('/login')
     }
 
-    // const profileData = JSON.parse(localStorage.getItem('profile'))
-    const [profileData, setProfileData] = useState(JSON.parse(localStorage.getItem('profile')))
+    const [profile, setProfile] = useState(JSON.parse(localStorage.getItem('profile')))
+    // const [profile, setProfile] = useState({})
 
-    const [email, setEmail] = useState(profileData.email);
-    const [name, setName] = useState(profileData.name);
+    useEffect(() => {
+        DbService.getUserProfile()
+            .then(res => {
+                console.log(profile)
+                console.log(res)
+                setProfile(res)
+                console.log(profile)
+            })
+    }, [])
+    // }, [profile])
+
+    //
+    // useEffect(() => {
+    //     function checkUserData() {
+    //         const item = localStorage.getItem('profile')
+    //         if (item) {
+    //             setProfile(JSON.parse(item))
+    //         }
+    //     }
+    //     window.addEventListener('storage', checkUserData)
+    //     return () => {
+    //         window.removeEventListener('storage', checkUserData)
+    //     }
+    // }, [])
+
+    const [email, setEmail] = useState(profile.email);
+    const [name, setName] = useState(profile.name);
     const [oldpassword, setOldPassword] = useState("");
     const [password, setPassword] = useState("");
     const [repassword, setRepassword] = useState("");
@@ -34,7 +59,7 @@ const Profile = () => {
     }
     const onSubmitFormName = event => {
         event.preventDefault()
-        DbService.editUserName(profileData.email, name)
+        DbService.editUserName(name)
     }
     const onSubmitFormPassword = event => {
         event.preventDefault()
@@ -42,7 +67,7 @@ const Profile = () => {
             alert('Passwords do not match!')
             return
         }
-        DbService.editUserPassword(profileData.email, oldpassword, password)
+        DbService.editUserPassword(oldpassword, password)
         setOldPassword('')
         setPassword('')
         setRepassword('')
@@ -50,7 +75,7 @@ const Profile = () => {
 
     return (
         <>
-            <h1 className={'text-center'}>{profileData.name}'s Profile</h1>
+            <h1 className={'text-center'}>{profile.name}'s Profile</h1>
             <h3 className={'text-center'}>Update your personal information</h3>
             <Form className={'mx-auto'} onSubmit={onSubmitFormName}>
                 <Form.Group controlId="email">

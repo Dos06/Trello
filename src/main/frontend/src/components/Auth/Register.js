@@ -5,7 +5,7 @@ import {useHistory} from "react-router-dom";
 
 const Register = () => {
     const history = useHistory()
-    if (DbService.getCurrentUser()) {
+    if (DbService.getCurrentToken()) {
         history.push('/profile')
     }
 

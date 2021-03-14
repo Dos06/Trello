@@ -5,7 +5,7 @@ import DbService from "../../_services/DbService";
 
 const Login = () => {
     const history = useHistory()
-    if (DbService.getCurrentUser()) {
+    if (DbService.getCurrentToken()) {
         history.push('/profile')
     }
 

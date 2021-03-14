@@ -7,9 +7,9 @@ const NavItems = () => {
         DbService.logout()
     }
 
-    const user = DbService.getCurrentUser()
+    const token = DbService.getCurrentToken()
     return (
-        user ?
+        token ?
             <>
                 <NavLink to={'/profile'} className="nav-link">Profile</NavLink>
                 <NavLink to={'/login'} onClick={logout} className="nav-link">Logout</NavLink>
