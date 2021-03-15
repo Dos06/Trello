@@ -35,7 +35,11 @@ class DbService {
 
     getUserProfile() {
         let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
-        return axios.get(auth + '/profile/' + token).then(response => {
+        return axios.get(auth + '/profile/' + token, {
+            headers: {
+                'Authentication': 'Bearer ' + token
+            }
+        }).then(response => {
             let data = response.data
             localStorage.setItem('profile', JSON.stringify(data))
             return data
@@ -44,7 +48,11 @@ class DbService {
 
     editUserName(name) {
         let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
-        return axios.put(auth + `/edit/name/${token}/${name}`).then(r => {
+        return axios.put(auth + `/edit/name/${token}/${name}`, {}, {
+            headers: {
+                'Authentication': 'Bearer ' + token
+            }
+        }).then(r => {
             this.getUserProfile()
             return r
         })
@@ -52,7 +60,11 @@ class DbService {
 
     async editUserPassword(oldpassword, password) {
         let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
-        return await axios.put(auth + `/edit/password/${token}/${oldpassword}/${password}`)
+        return await axios.put(auth + `/edit/password/${token}/${oldpassword}/${password}`, {},{
+            headers: {
+                'Authentication': 'Bearer ' + token
+            }
+        })
     }
 
     async getCards(name) {

@@ -3,7 +3,7 @@ import {useState} from "react";
 import {useHistory} from "react-router-dom";
 import DbService from "../../_services/DbService";
 
-const Login = () => {
+const Login = (props) => {
     const history = useHistory()
     if (DbService.getCurrentToken()) {
         history.push('/profile')
@@ -25,7 +25,22 @@ const Login = () => {
                     history.push('/')
                 }
             })
-            .catch(error => alert(error))
+            .catch(err => {
+                props.store.addNotification({
+                    title: err.toString(),
+                    message: ' ',
+                    type: 'danger',
+                    container: 'top-right',
+                    insert: 'top',
+                    animationIn: ['animated', 'fadeIn'],
+                    animationOut: ['animated', 'fadeOut'],
+                    dismiss: {
+                        duration: 2000,
+                        showIcon: true,
+                    },
+                    width: 500,
+                })
+            })
     }
 
     return (

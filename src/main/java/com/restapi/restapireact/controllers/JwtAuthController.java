@@ -96,11 +96,10 @@ public class JwtAuthController {
             @PathVariable String password) {
         String email = jwtTokenGenerator.getEmailFromToken(token);
         UserEntity user = userService.getOneByEmail(email);
-        System.out.println(user.getPassword() + "---------" + passwordEncoder.encode(oldpassword));
-//        if (user.getPassword().equals(passwordEncoder.encode(oldpassword))) {
+        if (passwordEncoder.matches(oldpassword, user.getPassword())) {
             user.setPassword(password);
             userService.save(user);
-//        }
+        }
         return ResponseEntity.ok(user);
     }
 }

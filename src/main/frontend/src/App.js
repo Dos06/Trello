@@ -1,4 +1,8 @@
 import './App.css';
+import ReactNotification from 'react-notifications-component'
+import {store} from 'react-notifications-component'
+import 'animate.css'
+import 'react-notifications-component/dist/theme.css'
 import {Fragment} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route, Switch, useParams, withRouter} from 'react-router-dom';
@@ -17,6 +21,7 @@ function App() {
         <BrowserRouter>
             <Fragment>
                 <HeaderWithRouter/>
+                <ReactNotification/>
                 <div className={'container'}>
                     <div className="row mt-4">
                         <div className="col-10 mx-auto">
@@ -24,7 +29,7 @@ function App() {
                             <Switch>
                                 <Route path='/profile' render={() => <Profile/>}/>
                                 <Route path='/register' render={() => <Register/>}/>
-                                <Route path='/login' render={() => <Login/>}/>
+                                <Route path='/login' render={() => <Login store={store}/>}/>
                                 <Route path={'/:id'} children={<Child/>}/>
                                 <Route path='/' exact render={() => <CardsContainer/>}/>
                             </Switch>
