@@ -1,12 +1,15 @@
 package com.restapi.restapireact.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,8 +32,14 @@ public class UserEntity implements UserDetails {
     private List<RoleEntity> roles;
 
     @Override
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (RoleEntity role : roles) {
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
+            authorities.add(authority);
+        }
+        return authorities;
     }
 
     @Override

@@ -23,4 +23,6 @@ public class Card {
     @Column(name = "date")
     private LocalDate date = LocalDate.now();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private UserEntity user;
 }

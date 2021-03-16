@@ -2,8 +2,11 @@ package com.restapi.restapireact.controllers;
 
 import com.restapi.restapireact.entities.Card;
 import com.restapi.restapireact.entities.Task;
+import com.restapi.restapireact.entities.UserEntity;
+import com.restapi.restapireact.jwt.JwtTokenGenerator;
 import com.restapi.restapireact.services.CardService;
 import com.restapi.restapireact.services.TaskService;
+import com.restapi.restapireact.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,10 @@ public class MainController {
     private CardService cardService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JwtTokenGenerator jwtTokenGenerator;
 
     @GetMapping("favicon.ico")
     @ResponseBody
@@ -31,6 +38,20 @@ public class MainController {
             cards = cardService.getAll();
         else
             cards = cardService.getAllByName(name);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/cards/{token}")
+    public ResponseEntity<?> getAllCardsByUser(
+            @PathVariable String token,
+            @RequestParam(name = "name", defaultValue = "") String name) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
+        UserEntity user = userService.getOneByEmail(email);
+        List<Card> cards;
+        if (name == null || name.equals(""))
+            cards  = cardService.getAllByUser(user);
+        else
+            cards = cardService.getAllByNameAndUser(name, user);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
@@ -60,6 +81,15 @@ public class MainController {
 
     @PostMapping(value = "/addCard")
     public ResponseEntity<?> addCard(@RequestBody Card card) {
+        cardService.add(card);
+        return ResponseEntity.ok(card);
+    }
+
+    @PostMapping(value = "/addCard/{token}")
+    public ResponseEntity<?> addCardToUser(@PathVariable String token, @RequestBody Card card) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
+        UserEntity user = userService.getOneByEmail(email);
+        card.setUser(user);
         cardService.add(card);
         return ResponseEntity.ok(card);
     }

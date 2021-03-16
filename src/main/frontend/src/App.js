@@ -5,17 +5,19 @@ import 'animate.css'
 import 'react-notifications-component/dist/theme.css'
 import {Fragment} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter, Route, Switch, useParams, withRouter} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect, useParams, withRouter} from 'react-router-dom';
 import CardDetails from "./components/CardDetails/CardDetails";
 import Header from "./components/Header/Header";
 import CardsContainer from "./components/Cards/CardsContainer";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Profile from "./components/Auth/Profile";
+import DbService from "./_services/DbService";
 
 const HeaderWithRouter = withRouter(Header);
 
 function App() {
+    const token = DbService.getCurrentToken()
 
     return (
         <BrowserRouter>
@@ -31,7 +33,9 @@ function App() {
                                 <Route path='/register' render={() => <Register/>}/>
                                 <Route path='/login' render={() => <Login store={store}/>}/>
                                 <Route path={'/:id'} children={<Child/>}/>
-                                <Route path='/' exact render={() => <CardsContainer/>}/>
+                                <Route path='/' exact>
+                                    {token ? <CardsContainer/> : <Redirect to={'/login'}/>}
+                                </Route>
                             </Switch>
 
                         </div>

@@ -6,6 +6,7 @@ const mapStateToProps = (state) => {
     return {
         cards: state.cardsPage.cards,
         search: state.cardsPage.search,
+        store: state.cardsPage.store,
     }
 }
 

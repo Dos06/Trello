@@ -39,7 +39,7 @@ const Cards = (props) => {
 
     return (
         <>
-            <AddForm loadData={loadData}/>
+            <AddForm loadData={loadData} store={props.store}/>
             <Search loadCardsByName={loadCardsByName}/>
             {
                 (cards === null || cards.length === 0) ? <NotFound/> : <CardsTable cards={cards}/>

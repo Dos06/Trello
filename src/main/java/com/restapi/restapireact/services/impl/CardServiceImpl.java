@@ -1,6 +1,7 @@
 package com.restapi.restapireact.services.impl;
 
 import com.restapi.restapireact.entities.Card;
+import com.restapi.restapireact.entities.UserEntity;
 import com.restapi.restapireact.repositories.CardRepository;
 import com.restapi.restapireact.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,16 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> getAllByName(String name) {
         return cardRepository.findAllByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<Card> getAllByUser(UserEntity user) {
+        return cardRepository.findAllByUser(user);
+    }
+
+    @Override
+    public List<Card> getAllByNameAndUser(String name, UserEntity user) {
+        return cardRepository.findAllByNameContainingIgnoreCaseAndUser(name, user);
     }
 
     @Override

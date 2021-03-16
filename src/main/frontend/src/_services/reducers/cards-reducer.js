@@ -1,10 +1,12 @@
 import DbService from "../DbService";
+import {store} from 'react-notifications-component'
 
 const SEARCH = 'SEARCH';
 
 let initialState = {
     cards: [DbService.getCards('')],
-    search: ''
+    search: '',
+    store: store,
 }
 
 const cardsReducer = (state = initialState, action) => {

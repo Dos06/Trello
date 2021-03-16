@@ -4,6 +4,7 @@ const auth = 'http://localhost:8080/auth';
 const cards = 'http://localhost:8080/cards';
 const card = 'http://localhost:8080/card/';
 const tasksByCard = 'http://localhost:8080/';
+const addCard = 'http://localhost:8080/addCard';
 const editCard = 'http://localhost:8080/editCard';
 const deleteCard = 'http://localhost:8080/deleteCard';
 const editTask = 'http://localhost:8080/editTask';
@@ -68,13 +69,23 @@ class DbService {
     }
 
     async getCards(name) {
-        return axios.get(cards + '?name=' + name);
+        let token
+        try {
+            token = JSON.parse(localStorage.getItem('token'))['jwtToken']
+            return await axios.get(`${cards}/${token}?name=${name}`);
+        } catch (e) {
+            console.log(e)
+        }
     }
     async getCard(id) {
         return axios.get(card + id);
     }
     async getTasksByCard(id) {
         return axios.get(tasksByCard + id);
+    }
+    async addCard(card) {
+        let token = JSON.parse(localStorage.getItem('token'))['jwtToken']
+        return axios.post(`${addCard}/${token}`, card);
     }
     async editCard(card) {
         return axios.put(editCard, card);

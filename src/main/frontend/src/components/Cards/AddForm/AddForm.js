@@ -1,9 +1,9 @@
 import {Button, Form} from "react-bootstrap";
 import {useState} from "react";
+import DbService from "../../../_services/DbService";
 
 const AddForm = (props) => {
     const [name, setName] = useState("");
-    const [message, setMessage] = useState("");
 
     const onChangeName = event => {
         setName(event.target.value);
@@ -18,23 +18,41 @@ const AddForm = (props) => {
     }
 
     async function addCard(data) {
-        const response = await fetch('http://localhost:8080/addCard', {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer',
-            body: JSON.stringify(data)
-        });
-
+        DbService.addCard(data)
+            .then(_ => {
+                props.store.addNotification({
+                    title: 'A card was added',
+                    message: ' ',
+                    type: 'success',
+                    container: 'top-right',
+                    insert: 'top',
+                    animationIn: ['animated', 'fadeIn'],
+                    animationOut: ['animated', 'fadeOut'],
+                    dismiss: {
+                        duration: 2000,
+                        showIcon: true,
+                    },
+                    width: 500,
+                })
+            })
+            .catch(e => {
+                props.store.addNotification({
+                    title: e.toString(),
+                    message: ' ',
+                    type: 'danger',
+                    container: 'top-right',
+                    insert: 'top',
+                    animationIn: ['animated', 'fadeIn'],
+                    animationOut: ['animated', 'fadeOut'],
+                    dismiss: {
+                        duration: 2000,
+                        showIcon: true,
+                    },
+                    width: 500,
+                })
+            console.log(e)
+        })
         props.loadData();
-
-        let messageData = await response.json();
-        setMessage(messageData.id ? 'Added: ' + messageData : 'Error')
     }
 
     return (
